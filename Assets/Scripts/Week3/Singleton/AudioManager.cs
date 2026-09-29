@@ -5,9 +5,14 @@ public class AudioManager : Singleton<AudioManager>
     public AudioSource source;
     public AudioSource musicSource;
     
-    [Range(0f, 1f)] public float musicVolume = 1f;
-    [Range(0f, 1f)] public float sfxVolume = 1f;
+    [SerializeField][Range(0f, 1f)] private float musicVolume = 1f;
+    [SerializeField][Range(0f, 1f)] private float sfxVolume = 1f;
 
+    void Start()
+    {
+        source.ignoreListenerPause  = true;
+    }
+    
     public void PlaySound(AudioClip clip)
     {
         source.PlayOneShot(clip, sfxVolume);
@@ -31,5 +36,10 @@ public class AudioManager : Singleton<AudioManager>
     {
         musicVolume = Mathf.Clamp01(volume);
         musicSource.volume = musicVolume;
+    }
+
+    public float GetSfxVolume()
+    {
+        return sfxVolume;
     }
 }

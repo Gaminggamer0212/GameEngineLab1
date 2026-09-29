@@ -10,6 +10,9 @@ public abstract class BaseEnemy : BaseCharacter
 
     protected Transform player;
     protected Rigidbody2D rb;
+    
+    [SerializeField] protected AudioClip hurtSound;
+    [SerializeField] protected AudioClip deathSound;
 
     protected virtual void Start()
     {
@@ -31,19 +34,21 @@ public abstract class BaseEnemy : BaseCharacter
         if (isInvincible) return;
         
         base.TakeDamage(damage);
+        AudioManager.Instance.PlaySound(hurtSound);
         StartCoroutine(Invincibility());
     }
 
     IEnumerator Invincibility()
     {
         isInvincible = true;
-        yield return new WaitForSeconds(0.51f);
+        yield return new WaitForSeconds(0.5f);
         isInvincible = false;
     }
 
     protected override void Death()
     {
         base.Death();
+        AudioManager.Instance.PlaySound(deathSound);
         Destroy(gameObject);
     }
 }

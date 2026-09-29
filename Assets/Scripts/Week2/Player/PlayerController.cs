@@ -5,22 +5,29 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] InputAction playerControlls;
     [SerializeField] InputAction playerAttack;
+    [SerializeField] InputAction ui;
     [SerializeField] float playerSpeed = 10f;
     [SerializeField] Sword sword;
     Rigidbody2D rb;
     Collider2D collider;
     Vector2 moveDirection;
+
+    [SerializeField] private GameObject uiPanel;
+    
+    [SerializeField] private AudioClip swordSound;
     
     private void OnEnable()
     {
         playerControlls.Enable();
         playerAttack.Enable();
+        ui.Enable();
     }
 
     private void OnDisable()
     {
         playerControlls.Disable();
         playerAttack.Disable();
+        ui.Disable();
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,6 +36,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         sword = GetComponent<Sword>();
+        uiPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -36,9 +44,23 @@ public class PlayerController : MonoBehaviour
     {
         moveDirection = playerControlls.ReadValue<Vector2>();
 
-        if (playerAttack.WasPressedThisFrame())
+        if (playerAttack.triggered)
         {
             Attack();
+        }
+
+        if (ui.triggered)
+        {
+            uiPanel.SetActive(!uiPanel.activeSelf);
+
+            if (uiPanel.activeSelf)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
         }
     }
 
@@ -55,5 +77,6 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         sword.Attack();
+        AudioManager.Instance.PlaySound(swordSound);
     }
 }

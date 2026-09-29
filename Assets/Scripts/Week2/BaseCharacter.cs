@@ -28,4 +28,10 @@ public abstract class BaseCharacter : MonoBehaviour
         isDead = true;
         Debug.Log(gameObject.name + " died");
     }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
 }
